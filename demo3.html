@@ -1,0 +1,987 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zendix - Document Automation Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #060816;
+      --bg-2: #0a1022;
+      --surface: rgba(16, 22, 41, 0.8);
+      --surface-2: rgba(20, 28, 50, 0.92);
+      --surface-3: rgba(255, 255, 255, 0.04);
+      --text: #f8fafc;
+      --muted: #98a2b3;
+      --border: rgba(255, 255, 255, 0.08);
+      --primary: #8b5cf6;
+      --primary-2: #06b6d4;
+      --primary-3: #22c55e;
+      --danger: #f87171;
+      --success: #34d399;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.38);
+      --radius: 24px;
+    }* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  line-height: 1.65;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(139, 92, 246, 0.18), transparent 22%),
+    radial-gradient(circle at 90% 8%, rgba(6, 182, 212, 0.14), transparent 18%),
+    radial-gradient(circle at 50% 100%, rgba(34, 197, 94, 0.08), transparent 22%),
+    linear-gradient(180deg, #060816 0%, #080d1b 48%, #050714 100%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  width: 100%;
+  display: block;
+}
+
+.container {
+  width: min(1200px, 92%);
+  margin: 0 auto;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(18px);
+  background: rgba(6, 8, 22, 0.76);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.nav-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.logo {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  background: linear-gradient(135deg, #ffffff, #c4b5fd 40%, #67e8f9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-links a,
+.mobile-menu a,
+.footer-links a {
+  color: var(--muted);
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.nav-links a:hover,
+.mobile-menu a:hover,
+.footer-links a:hover {
+  color: #ffffff;
+}
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  width: 28px;
+  height: 3px;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.menu-toggle.active span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.menu-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+.mobile-menu {
+  max-height: 0;
+  overflow: hidden;
+  background: rgba(6, 8, 22, 0.98);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: max-height 0.28s ease;
+}
+
+.mobile-menu.active {
+  max-height: 320px;
+}
+
+.mobile-menu-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0 1.5rem;
+  text-align: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  padding: 0.95rem 1.35rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  color: white;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  box-shadow: 0 16px 36px rgba(124, 58, 237, 0.28);
+}
+
+.btn-secondary {
+  color: white;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+section {
+  padding: 5.75rem 0;
+}
+
+.hero {
+  padding-top: 6.8rem;
+}
+
+.hero-grid,
+.showcase {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3.5rem;
+  align-items: center;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #d8b4fe;
+  margin-bottom: 1.35rem;
+  font-weight: 600;
+}
+
+.hero h1 {
+  font-size: clamp(3rem, 6.8vw, 5.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.07em;
+  margin-bottom: 1.4rem;
+  max-width: 11ch;
+}
+
+.hero p,
+.section-header p,
+.card p,
+.card li,
+.showcase-content p,
+footer p {
+  color: var(--muted);
+}
+
+.hero p {
+  font-size: 1.1rem;
+  max-width: 620px;
+  margin-bottom: 2rem;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.hero-image {
+  position: relative;
+}
+
+.hero-image img {
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow);
+  background: var(--surface-2);
+}
+
+.section-header {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 3.5rem;
+}
+
+.section-header h2 {
+  font-size: clamp(2.2rem, 4.8vw, 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.055em;
+  margin-bottom: 0.95rem;
+}
+
+.grid-3,
+.workflow,
+.workflow-gallery,
+.hero-points {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.grid-3,
+.workflow {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.hero-points,
+.workflow-gallery {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.hero-point,
+.card,
+.workflow-shot,
+.pricing-wrap,
+table {
+  background: linear-gradient(180deg, rgba(18, 24, 41, 0.96), rgba(11, 16, 31, 0.96));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.hero-point,
+.card {
+  padding: 1.9rem;
+}
+
+.hero-point {
+  color: #dbe4f0;
+}
+
+.card h3 {
+  margin-bottom: 0.9rem;
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+}
+
+.card ul {
+  margin-top: 0.9rem;
+  padding-left: 1.2rem;
+}
+
+.card li + li {
+  margin-top: 0.35rem;
+}
+
+.step-number {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: white;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  box-shadow: 0 14px 34px rgba(124, 58, 237, 0.28);
+}
+
+.workflow-shot {
+  overflow: hidden;
+}
+
+.workflow-shot img {
+  height: 320px;
+  object-fit: cover;
+}
+
+.shot-label {
+  padding: 1.1rem 1.15rem 0.3rem;
+  font-weight: 700;
+}
+
+.shot-desc {
+  padding: 0 1.15rem 1.15rem;
+  color: var(--muted);
+}
+
+.showcase {
+  margin-top: 3rem;
+}
+
+.showcase-content h3 {
+  font-size: 2rem;
+  letter-spacing: -0.04em;
+  margin-bottom: 1rem;
+}
+
+.showcase-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.4rem;
+}
+
+.showcase-list div {
+  padding: 1rem 1.1rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #dce7f7;
+}
+
+.pricing-wrap {
+  overflow-x: auto;
+  padding: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+th,
+td {
+  padding: 1.05rem 1.1rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  vertical-align: top;
+}
+
+th {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+}
+
+tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cta {
+  background: linear-gradient(180deg, rgba(124, 58, 237, 0.12), rgba(6, 182, 212, 0.05));
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cta-box {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cta h2 {
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.06em;
+  margin-bottom: 0.9rem;
+}
+
+.demo-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.demo-form input,
+.demo-form textarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 1rem;
+  color: white;
+  font-family: inherit;
+  outline: none;
+}
+
+.demo-form input::placeholder,
+.demo-form textarea::placeholder {
+  color: #94a3b8;
+}
+
+.demo-form textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.form-status {
+  min-height: 1.5rem;
+  font-weight: 600;
+}
+
+.form-status.success {
+  color: var(--success);
+}
+
+.form-status.error {
+  color: var(--danger);
+}
+
+footer {
+  padding: 3rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.8rem;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.footer-note {
+  max-width: 420px;
+}
+
+@media (max-width: 980px) {
+  .hero-grid,
+  .showcase,
+  .hero-points,
+  .workflow-gallery,
+  .grid-3,
+  .workflow {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .hero {
+    padding-top: 5rem;
+  }
+
+  .hero h1 {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  section {
+    padding: 4.8rem 0;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+  </style>
+</head>
+<body>  <nav class="navbar">
+    <div class="container nav-content">
+      <div class="logo">Zendix</div><div class="nav-links">
+    <a href="#problems">Problems</a>
+    <a href="#features">Features</a>
+    <a href="#workflow">Workflow</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#demo">Request Demo</a>
+  </div>
+
+  <div class="menu-toggle" id="menuToggle" aria-label="Open menu" role="button" tabindex="0">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner container">
+    <a href="#problems" class="mobile-link">Problems</a>
+    <a href="#features" class="mobile-link">Features</a>
+    <a href="#workflow" class="mobile-link">Workflow</a>
+    <a href="#pricing" class="mobile-link">Pricing</a>
+    <a href="#demo" class="mobile-link">Request Demo</a>
+  </div>
+</div>
+
+  </nav>  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="badge">AI-powered document automation</div>
+        <h1>Stop manual data entry from documents and emails</h1>
+        <p>
+          Zendix automatically extracts structured data from PDFs, images, emails, and attachments into clean, reviewable tables your team can edit, approve, and export.
+        </p>
+        <div class="hero-actions">
+          <a href="#demo" class="btn btn-primary">Request a Demo</a>
+          <a href="#workflow" class="btn btn-secondary">See How It Works</a>
+        </div>
+      </div><div class="hero-image">
+    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop" alt="Zendix dashboard preview">
+  </div>
+</div>
+
+  </section>  <section>
+    <div class="container">
+      <div class="hero-points">
+        <div class="hero-point">Extract data from PDFs, images, and email attachments automatically.</div>
+        <div class="hero-point">Human review workflows included — no blind AI automation.</div>
+        <div class="hero-point">Organize workflows across teams, departments, and customers.</div>
+        <div class="hero-point">Export structured data to CSV and Excel instantly.</div>
+      </div>
+    </div>
+  </section>  <section id="problems">
+    <div class="container">
+      <div class="section-header">
+        <h2>Manual data entry slows teams down</h2>
+        <p>Many businesses still spend hours copying information from documents into spreadsheets or internal systems.</p>
+      </div><div class="grid-3">
+    <div class="card">
+      <h3>Too Much Manual Typing</h3>
+      <p>Teams waste time entering data from PDFs, images, emails, and forms by hand.</p>
+    </div>
+
+    <div class="card">
+      <h3>Costly Errors</h3>
+      <p>Manual re-entry often causes mistakes that lead to delays, confusion, and extra cleanup work.</p>
+    </div>
+
+    <div class="card">
+      <h3>Scattered Workflows</h3>
+      <p>Documents arrive from different sources and departments, making it hard to keep everything organized.</p>
+    </div>
+  </div>
+</div>
+
+  </section>  <section id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2>Built for teams handling high volumes of documents</h2>
+        <p>Zendix helps businesses process documents faster by turning messy files and emails into structured, usable data.</p>
+      </div><div class="grid-3">
+    <div class="card">
+      <h3>AI-powered extraction</h3>
+      <p>Extract predefined structured data from PDFs, images, text files, and email attachments in seconds.</p>
+    </div>
+
+    <div class="card">
+      <h3>Human review layer</h3>
+      <p>Compare extracted data with original source files, edit values, and approve results confidently.</p>
+    </div>
+
+    <div class="card">
+      <h3>Email automation</h3>
+      <p>Automatically process incoming business emails and attachments periodically or on demand.</p>
+    </div>
+
+    <div class="card">
+      <h3>Reusable schemas</h3>
+      <p>Create extraction templates once and reuse them across different workflows and teams.</p>
+    </div>
+
+    <div class="card">
+      <h3>Multi-environment workflows</h3>
+      <p>Separate workflows by department, customer, business unit, or use case for cleaner operations.</p>
+    </div>
+
+    <div class="card">
+      <h3>Export ready data</h3>
+      <p>Export clean structured results to CSV or Excel for reporting, analytics, or downstream tools.</p>
+    </div>
+  </div>
+</div>
+
+  </section>  <section id="workflow">
+    <div class="container">
+      <div class="section-header">
+        <h2>How Zendix works</h2>
+        <p>Automate repetitive document workflows in four simple steps.</p>
+      </div><div class="workflow">
+    <div class="card">
+      <div class="step-number">1</div>
+      <h3>Upload or connect</h3>
+      <p>Upload PDFs, images, and text files or connect your business email inbox.</p>
+    </div>
+
+    <div class="card">
+      <div class="step-number">2</div>
+      <h3>Automatic extraction</h3>
+      <p>Zendix extracts predefined fields and structures the data into organized tables.</p>
+    </div>
+
+    <div class="card">
+      <div class="step-number">3</div>
+      <h3>Review and approve</h3>
+      <p>Teams can compare extracted data with source documents and fix anything if needed.</p>
+    </div>
+
+    <div class="card">
+      <div class="step-number">4</div>
+      <h3>Export and continue</h3>
+      <p>Export clean structured data to CSV or continue workflows inside Zendix.</p>
+    </div>
+
+    <div class="card">
+      <div class="step-number">5</div>
+      <h3>Organize by environment</h3>
+      <p>Separate workflows by customer, department, or business unit for cleaner operations.</p>
+    </div>
+
+    <div class="card">
+      <div class="step-number">6</div>
+      <h3>Reuse schemas</h3>
+      <p>Build extraction schemas once and apply them again across repeated document workflows.</p>
+    </div>
+  </div>
+
+  <div class="workflow-gallery">
+    <div class="workflow-shot">
+      <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1600&auto=format&fit=crop" alt="Document to table extraction">
+      <div class="shot-label">Document to Table</div>
+      <div class="shot-desc">Turn files into structured records automatically.</div>
+    </div>
+
+    <div class="workflow-shot">
+      <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1600&auto=format&fit=crop" alt="Review workflow screen">
+      <div class="shot-label">Review Screen</div>
+      <div class="shot-desc">Inspect and edit extracted results before approval.</div>
+    </div>
+
+    <div class="workflow-shot">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1600&auto=format&fit=crop" alt="Fail reason panel">
+      <div class="shot-label">Fail Reason</div>
+      <div class="shot-desc">See issues detected during extraction and correct them.</div>
+    </div>
+
+    <div class="workflow-shot">
+      <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1600&auto=format&fit=crop" alt="Email workflow automation">
+      <div class="shot-label">Email Automation</div>
+      <div class="shot-desc">Automatically process incoming emails and attachments.</div>
+    </div>
+  </div>
+
+  <div class="showcase">
+    <div>
+      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop" alt="Zendix dashboard preview">
+    </div>
+
+    <div class="showcase-content">
+      <h3>Designed for real business workflows</h3>
+      <p>
+        Zendix combines AI-powered extraction with human review so your team stays in control while processing documents faster.
+      </p>
+
+      <div class="showcase-list">
+        <div>Separate workflows across customers, departments, and business units using environments.</div>
+        <div>Create reusable schemas for invoices, shipment records, HR forms, and more.</div>
+        <div>Detect extraction issues early using built-in fail reason reporting.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </section>  <section id="use-cases">
+    <div class="container">
+      <div class="section-header">
+        <h2>Common Zendix use cases</h2>
+        <p>Flexible enough for logistics, finance, HR, operations, support, and research teams.</p>
+      </div><div class="grid-3">
+    <div class="card">
+      <h3>Logistics</h3>
+      <ul>
+        <li>Shipment documents</li>
+        <li>Invoices and manifests</li>
+        <li>Email attachment workflows</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>HR and Recruitment</h3>
+      <ul>
+        <li>Applicant records</li>
+        <li>CV processing</li>
+        <li>Onboarding forms</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Finance and Operations</h3>
+      <ul>
+        <li>Receipts and invoices</li>
+        <li>Payment records</li>
+        <li>Operational reports</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Research Teams</h3>
+      <ul>
+        <li>Survey records</li>
+        <li>Participant data</li>
+        <li>Field forms</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Customer Support</h3>
+      <ul>
+        <li>Request forms</li>
+        <li>Case details</li>
+        <li>Follow-up records</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Administration</h3>
+      <ul>
+        <li>Internal documents</li>
+        <li>Approval workflows</li>
+        <li>Manual data entry replacement</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+  </section>  <section id="pricing">
+    <div class="container">
+      <div class="section-header">
+        <h2>Simple pricing that scales with your workload</h2>
+        <p>Choose a plan based on monthly document volume and storage needs. Higher tiers include more capacity and room for larger teams.</p>
+      </div><div class="pricing-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Plan</th>
+          <th>Monthly Payment</th>
+          <th>Page Limit</th>
+          <th>File Storage Limit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Starter</td>
+          <td>₦100,000 / month</td>
+          <td>2,000 pages</td>
+          <td>50 GB</td>
+        </tr>
+        <tr>
+          <td>Growth</td>
+          <td>₦150,000 / month</td>
+          <td>5,000 pages</td>
+          <td>100 GB</td>
+        </tr>
+        <tr>
+          <td>Business</td>
+          <td>₦200,000 / month</td>
+          <td>10,000 pages</td>
+          <td>250 GB</td>
+        </tr>
+        <tr>
+          <td>Scale</td>
+          <td>₦250,000 / month</td>
+          <td>20,000 pages</td>
+          <td>500 GB</td>
+        </tr>
+        <tr>
+          <td>Enterprise</td>
+          <td>Custom pricing</td>
+          <td>Custom / high volume</td>
+          <td>Custom storage</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+  </section>  <section id="faq">
+    <div class="container">
+      <div class="section-header">
+        <h2>Frequently asked questions</h2>
+        <p>Quick answers to the questions businesses usually ask before booking a demo.</p>
+      </div><div class="grid-3">
+    <div class="card">
+      <h3>What file types does Zendix support?</h3>
+      <p>Zendix supports PDFs, PNG, JPEG/JPG, WEBP, TXT files, and email attachments.</p>
+    </div>
+
+    <div class="card">
+      <h3>Can teams review extracted data before using it?</h3>
+      <p>Yes. Teams can compare extracted data with the source file, edit values, and approve results.</p>
+    </div>
+
+    <div class="card">
+      <h3>Can Zendix handle different departments or customers?</h3>
+      <p>Yes. Multi-environment workflows let businesses separate documents by department, client, or workflow.</p>
+    </div>
+
+    <div class="card">
+      <h3>Does Zendix support email automation?</h3>
+      <p>Yes. It can automatically process incoming business emails and attachments on a schedule or manually.</p>
+    </div>
+
+    <div class="card">
+      <h3>Can extracted data be exported?</h3>
+      <p>Yes. Clean structured data can be exported to CSV or Excel for use in other tools.</p>
+    </div>
+
+    <div class="card">
+      <h3>How does Zendix reduce errors?</h3>
+      <p>Zendix includes review workflows and fail reason detection so teams can fix issues before export.</p>
+    </div>
+  </div>
+</div>
+
+  </section>  <section class="cta" id="demo">
+    <div class="container">
+      <div class="cta-box">
+        <h2>See Zendix with your own documents</h2>
+        <p>Book a quick demo and see how Zendix processes your real workflows using sample documents from your business.</p><form class="demo-form" id="demoForm" action="https://formspree.io/f/your-form-id" method="POST">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Business Email" required>
+      <input type="text" name="company" placeholder="Company Name">
+      <textarea name="message" placeholder="What type of documents or workflows are you looking to automate?" required></textarea>
+
+      <button class="btn btn-primary" type="submit" id="submitBtn">Request Demo</button>
+      <div class="form-status" id="formStatus" aria-live="polite"></div>
+    </form>
+  </div>
+</div>
+
+  </section>  <footer>
+    <div class="container footer-content">
+      <div class="footer-note">
+        <div class="logo">Zendix</div>
+        <p>AI-powered document automation platform.</p>
+      </div><div class="footer-links">
+    <a href="#problems">Problems</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#demo">Request Demo</a>
+  </div>
+</div>
+
+  </footer>  <script>
+    const form = document.getElementById('demoForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const formStatus = document.getElementById('formStatus');
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    function closeMenu() {
+      mobileMenu.classList.remove('active');
+      menuToggle.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function toggleMenu() {
+      const isOpen = mobileMenu.classList.toggle('active');
+      menuToggle.classList.toggle('active', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    }
+
+    menuToggle.addEventListener('click', toggleMenu);
+    menuToggle.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleMenu();
+      }
+    });
+
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const endpoint = form.getAttribute('action');
+
+      formStatus.textContent = '';
+      formStatus.className = 'form-status';
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json'
+          },
+          body: formData
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok) {
+          form.reset();
+          formStatus.textContent = data?.message || 'Your demo request was sent successfully.';
+          formStatus.classList.add('success');
+        } else {
+          formStatus.textContent = data?.error || 'Something went wrong while sending your request.';
+          formStatus.classList.add('error');
+        }
+      } catch (error) {
+        formStatus.textContent = 'Network error. Please try again in a moment.';
+        formStatus.classList.add('error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Request Demo';
+      }
+    });
+  </script></body>
+</html>

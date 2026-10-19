@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zendix - Document Automation Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #081018;
+      --card: #111c27;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: rgba(255,255,255,0.08);
+      --success: #34d399;
+      --error: #f87171;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      width: 100%;
+      display: block;
+    }
+
+    .container {
+      width: min(1180px, 92%);
+      margin: 0 auto;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(14px);
+      background: rgba(8, 16, 24, 0.72);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      transition: 0.2s;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      color: white;
+    }
+
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      position: relative;
+      z-index: 2001;
+    }
+
+    .menu-toggle span {
+      width: 26px;
+      height: 3px;
+      border-radius: 999px;
+      background: white;
+      transition: 0.2s ease;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .mobile-menu {
+      display: block;
+      max-height: 0;
+      overflow: hidden;
+      background: rgba(8, 16, 24, 0.98);
+      border-bottom: 1px solid var(--border);
+      transition: max-height 0.3s ease;
+    }
+
+    .mobile-menu.active {
+      max-height: 320px;
+    }
+
+    .mobile-menu-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem 1.5rem;
+      text-align: center;
+    }
+
+    .mobile-menu a {
+      color: white;
+      font-size: 1.05rem;
+      font-weight: 600;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      width: 100%;
+    }
+
+    .mobile-menu a:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.95rem 1.4rem;
+      border-radius: 14px;
+      font-weight: 600;
+      transition: 0.2s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 10px 30px rgba(59,130,246,0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--border);
+      color: white;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .hero {
+      padding: 7rem 0 4rem;
+      position: relative;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: rgba(59,130,246,0.15);
+      filter: blur(100px);
+      top: -200px;
+      right: -150px;
+      z-index: -1;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(59,130,246,0.12);
+      color: #bfdbfe;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(59,130,246,0.25);
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 6vw, 5rem);
+      line-height: 1.05;
+      letter-spacing: -0.05em;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.15rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-image {
+      position: relative;
+    }
+
+    .hero-image img {
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.45);
+    }
+
+    section {
+      padding: 6rem 0;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 4rem;
+    }
+
+    .section-header h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 1rem;
+      letter-spacing: -0.04em;
+    }
+
+    .section-header p {
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    .hero-points {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .hero-point {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2rem;
+      transition: 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(59,130,246,0.35);
+    }
+
+    .card h3 {
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+    }
+
+    .card ul {
+      margin-top: 1rem;
+      padding-left: 1.2rem;
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+
+    .step-number {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(59,130,246,0.15);
+      color: #bfdbfe;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .workflow-gallery {
+      margin-top: 3rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .workflow-shot {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .workflow-shot img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .shot-label {
+      padding: 1rem 1.1rem 1.2rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .shot-desc {
+      padding: 0 1.1rem 1.2rem;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .showcase {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      align-items: center;
+      margin-top: 4rem;
+    }
+
+    .showcase-content h3 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .showcase-content p {
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .showcase-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .showcase-list div {
+      padding: 1rem;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .cta {
+      text-align: center;
+      background: linear-gradient(180deg, rgba(59,130,246,0.12), rgba(59,130,246,0.03));
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cta-box {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .cta h2 {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .cta p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+
+    .demo-form {
+      display: grid;
+      gap: 1rem;
+      margin-top: 2rem;
+      text-align: left;
+    }
+
+    .demo-form input,
+    .demo-form textarea {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1rem;
+      color: white;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .demo-form input::placeholder,
+    .demo-form textarea::placeholder {
+      color: #94a3b8;
+    }
+
+    .demo-form textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-status {
+      min-height: 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .form-status.success {
+      color: var(--success);
+    }
+
+    .form-status.error {
+      color: var(--error);
+    }
+
+    footer {
+      padding: 3rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-content p,
+    .footer-links a {
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .showcase,
+      .workflow,
+      .workflow-gallery,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 5rem;
+      }
+
+      .hero-points {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container nav-content">
+      <div class="logo">Zendix</div>
+
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#workflow">How It Works</a>
+        <a href="#use-cases">Use Cases</a>
+        <a href="#demo">Request Demo</a>
+      </div>
+
+      <div class="menu-toggle" id="menuToggle" aria-label="Open menu" role="button" tabindex="0">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="mobile-menu-inner">
+        <a href="#features" class="mobile-link">Features</a>
+        <a href="#workflow" class="mobile-link">How It Works</a>
+        <a href="#use-cases" class="mobile-link">Use Cases</a>
+        <a href="#demo" class="mobile-link">Request Demo</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="badge">AI-Powered Document Automation</div>
+
+        <h1>Stop Manual Data Entry From Documents and Emails</h1>
+
+        <p>
+          Zendix automatically extracts structured data from PDFs, images, emails, and attachments into clean, reviewable tables your team can edit, approve, and export.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#demo" class="btn btn-primary">Request a Demo</a>
+          <a href="#workflow" class="btn btn-secondary">See How It Works</a>
+        </div>
+      </div>
+
+      <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop" alt="Zendix dashboard preview">
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="hero-points">
+        <div class="hero-point">Extract data from PDFs, images, and email attachments automatically.</div>
+        <div class="hero-point">Human review workflows included — no blind AI automation.</div>
+        <div class="hero-point">Organize workflows across teams, departments, and customers.</div>
+        <div class="hero-point">Export structured data to CSV and Excel instantly.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2>Built for Teams Handling High Volumes of Documents</h2>
+        <p>Zendix helps businesses process documents faster by turning messy files and emails into structured, usable data.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>AI-Powered Extraction</h3>
+          <p>Extract predefined structured data from PDFs, images, text files, and email attachments in seconds.</p>
+        </div>
+
+        <div class="card">
+          <h3>Human Review Layer</h3>
+          <p>Compare extracted data with original source files, edit values, and approve results confidently.</p>
+        </div>
+
+        <div class="card">
+          <h3>Email Automation</h3>
+          <p>Automatically process incoming business emails and attachments periodically or on demand.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="workflow">
+    <div class="container">
+      <div class="section-header">
+        <h2>How Zendix Works</h2>
+        <p>Automate repetitive document workflows in four simple steps.</p>
+      </div>
+
+      <div class="workflow">
+        <div class="card">
+          <div class="step-number">1</div>
+          <h3>Upload or Connect</h3>
+          <p>Upload PDFs, images, and text files or connect your business email inbox.</p>
+        </div>
+
+        <div class="card">
+          <div class="step-number">2</div>
+          <h3>Automatic Extraction</h3>
+          <p>Zendix extracts predefined fields and structures the data into organized tables.</p>
+        </div>
+
+        <div class="card">
+          <div class="step-number">3</div>
+          <h3>Review and Approve</h3>
+          <p>Teams can compare extracted data with source documents and fix anything if needed.</p>
+        </div>
+
+        <div class="card">
+          <div class="step-number">4</div>
+          <h3>Export and Continue</h3>
+          <p>Export clean structured data to CSV or continue workflows inside Zendix.</p>
+        </div>
+      </div>
+
+      <div class="workflow-gallery">
+        <div class="workflow-shot">
+          <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1600&auto=format&fit=crop" alt="Document to table extraction">
+          <div class="shot-label">Document to Table</div>
+          <div class="shot-desc">Turn files into structured records automatically.</div>
+        </div>
+
+        <div class="workflow-shot">
+          <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1600&auto=format&fit=crop" alt="Review workflow screen">
+          <div class="shot-label">Review Screen</div>
+          <div class="shot-desc">Inspect and edit extracted results before approval.</div>
+        </div>
+
+        <div class="workflow-shot">
+          <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1600&auto=format&fit=crop" alt="Fail reason panel">
+          <div class="shot-label">Fail Reason</div>
+          <div class="shot-desc">See issues detected during extraction and correct them.</div>
+        </div>
+
+        <div class="workflow-shot">
+          <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1600&auto=format&fit=crop" alt="Email workflow automation">
+          <div class="shot-label">Email Automation</div>
+          <div class="shot-desc">Automatically process incoming emails and attachments.</div>
+        </div>
+      </div>
+
+      <div class="showcase">
+        <div>
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop" alt="Zendix dashboard preview">
+        </div>
+
+        <div class="showcase-content">
+          <h3>Designed for Real Business Workflows</h3>
+          <p>
+            Zendix combines AI-powered extraction with human review so your team stays in control while processing documents faster.
+          </p>
+
+          <div class="showcase-list">
+            <div>Separate workflows across customers, departments, and business units using environments.</div>
+            <div>Create reusable schemas for invoices, shipment records, HR forms, and more.</div>
+            <div>Detect extraction issues early using built-in fail reason reporting.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="use-cases">
+    <div class="container">
+      <div class="section-header">
+        <h2>Common Zendix Use Cases</h2>
+        <p>Flexible enough for logistics, finance, HR, operations, support, and research teams.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>Logistics</h3>
+          <ul>
+            <li>Shipment documents</li>
+            <li>Invoices and manifests</li>
+            <li>Email attachment workflows</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>HR and Recruitment</h3>
+          <ul>
+            <li>Applicant records</li>
+            <li>CV processing</li>
+            <li>Onboarding forms</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Finance and Operations</h3>
+          <ul>
+            <li>Receipts and invoices</li>
+            <li>Payment records</li>
+            <li>Operational reports</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Research Teams</h3>
+          <ul>
+            <li>Survey records</li>
+            <li>Participant data</li>
+            <li>Field forms</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Customer Support</h3>
+          <ul>
+            <li>Request forms</li>
+            <li>Case details</li>
+            <li>Follow-up records</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Administration</h3>
+          <ul>
+            <li>Internal documents</li>
+            <li>Approval workflows</li>
+            <li>Manual data entry replacement</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" id="demo">
+    <div class="container">
+      <div class="cta-box">
+        <h2>See Zendix With Your Own Documents</h2>
+        <p>Book a quick demo and see how Zendix processes your real workflows using sample documents from your business.</p>
+
+        <form class="demo-form" id="demoForm" action="https://formspree.io/f/xzdaqpjr" method="POST">
+          <input type="text" name="name" placeholder="Your Name" required>
+          <input type="email" name="email" placeholder="Business Email" required>
+          <input type="text" name="company" placeholder="Company Name">
+          <textarea name="message" placeholder="What type of documents or workflows are you looking to automate?" required></textarea>
+
+          <button class="btn btn-primary" type="submit" id="submitBtn">Request Demo</button>
+          <div class="form-status" id="formStatus" aria-live="polite"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-content">
+      <div>
+        <div class="logo">Zendix</div>
+        <p>AI-powered document automation platform.</p>
+      </div>
+
+      <div class="footer-links">
+        <a href="#features">Features</a>
+        <a href="#workflow">How It Works</a>
+        <a href="#demo">Request Demo</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('demoForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const formStatus = document.getElementById('formStatus');
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    function closeMenu() {
+      mobileMenu.classList.remove('active');
+      menuToggle.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function toggleMenu() {
+      const isOpen = mobileMenu.classList.toggle('active');
+      menuToggle.classList.toggle('active', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    }
+
+    menuToggle.addEventListener('click', toggleMenu);
+    menuToggle.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleMenu();
+      }
+    });
+
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const endpoint = form.getAttribute('action');
+
+      formStatus.textContent = '';
+      formStatus.className = 'form-status';
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json'
+          },
+          body: formData
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok) {
+          form.reset();
+          formStatus.textContent = data?.message || 'Your demo request was sent successfully.';
+          formStatus.classList.add('success');
+        } else {
+          formStatus.textContent = data?.error || 'Something went wrong while sending your request.';
+          formStatus.classList.add('error');
+        }
+      } catch (error) {
+        formStatus.textContent = 'Network error. Please try again in a moment.';
+        formStatus.classList.add('error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Request Demo';
+      }
+    });
+  </script>
+
+</body>
+</html>
