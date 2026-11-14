@@ -1,6 +1,6 @@
 (function () {
     const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xzdaqpjr';
-    const WHATSAPP_NUMBER = '2347038334577';
+    const WHATSAPP_NUMBER = '07064803251';
 
     const menuBtn = document.querySelector('.menu-toggle');
     const mobileMenu = document.getElementById('mobileMenu');
