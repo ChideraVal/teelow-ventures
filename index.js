@@ -673,7 +673,7 @@
 
             if (getLink) {
                 getLink.href = whatsappHref(
-                    `Hi, I'm interested in ${title}. Please send availability and pricing.`
+                    `Hi Teelow Printing World, I'm interested in ${title}. Please send availability and pricing.`
                 );
 
                 getLink.target = '_blank';
@@ -877,7 +877,7 @@
 
             if (pmGetLink) {
                 pmGetLink.href = whatsappHref(
-                    `Hi, I'm interested in ${title}. Please send availability and pricing.`
+                    `Hi Teelow Printing World, I'm interested in ${title}. Please send availability and pricing.`
                 );
 
                 pmGetLink.target = '_blank';
